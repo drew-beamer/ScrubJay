@@ -99,7 +99,7 @@ export async function sendEmbeds(
                     try {
                         channel.send({ embeds: [embed] });
                     } catch (err) {
-                        console.log('Likely missing permissions', err);
+                        console.log('Missing perms!');
                     }
                 }, 500);
             });
