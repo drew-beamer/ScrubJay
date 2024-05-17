@@ -9,7 +9,7 @@ import Location from '../../../models/location';
 function getObservationsInDateRange() {
     const currentDateTime = new Date();
     const currentDateTimeMinus15Minutes = new Date(
-        currentDateTime.valueOf() - 60 * 45 * 1000
+        currentDateTime.valueOf() - 60 * 15 * 1000
     );
     console.log(currentDateTimeMinus15Minutes);
     const dateTimeMinusOneWeek = new Date(
