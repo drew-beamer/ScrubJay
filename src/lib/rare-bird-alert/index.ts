@@ -1,6 +1,5 @@
 import { Client } from 'discord.js';
 import { CronJob } from 'cron';
-import { RareBirdAlertFilter } from '../filters/types';
 import {
     RegionChannelMapping,
     CountyRegionMapping,
@@ -49,6 +48,8 @@ export class RareBirdAlert<Regions extends string> {
             await insertLocationsFromObservations(this.dbClient, eBirdResult);
         });
 
+        console.log('Database populated.');
+
         this.cronJob = this.initializeCron();
 
         if (this.cronJob) {
@@ -57,7 +58,7 @@ export class RareBirdAlert<Regions extends string> {
     }
 
     private initializeCron() {
-        return new CronJob('0 */1 * * * *', async () => {
+        return new CronJob('0 */5 * * * *', async () => {
             console.log(`Running Rare Bird Alert for ${this.regionCode}`);
             const eBirdResult = await fetchRareObservations(this.regionCode);
             try {
