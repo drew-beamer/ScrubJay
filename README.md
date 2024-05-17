@@ -1,21 +1,16 @@
-# ScrubJay
+# ScrubJay Discord Bot
 
-This repository contains the source code for the ScrubJay Discord bot. ScrubJay is a bot for the
-California Birding Discord server. It is written in JavaScript using the [discord.js](https://discord.js.org/#/),
-and hosted on a Raspberry Pi 4.
+ScrubJay is a Discord bot designed and built for the California Birding community server. The bot
+is built to exist in a single server, and is not designed to be used in multiple servers at once.
 
 ## Features
 
-- 🐦 California-wide Rare Bird Alert using the eBird API
-
-## Planned Features
-
-- 🐦 Census-region specific Rare Bird Alerts
-- ⚙️ Utility functions for birders
+- Integration with [eBird's](https://ebird.org/home) API to create a rare bird alert system. The bot
+  will post a message in a specified channel when a rare bird, meeting additional filter criteria,
+  is reported in the state of California.
+- More features coming soon!
 
 ## Contributing
 
-I'm always open to contributions! If you have an idea for a feature, or want to help out, feel free to open an issue. If you want to contribute code, please fork the repository and open a pull request. I'm working on
-developing more robust contribution resources, but in the meantime feel free to reach out to me on Discord.
-
-test
+Depending on interest, I may open source this bot. If you are interested in contributing, please
+reach out to me on Discord.
