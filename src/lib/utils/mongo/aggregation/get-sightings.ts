@@ -117,12 +117,7 @@ function getObservationsInDateRange() {
         },
         {
             $project: {
-                mostRecentTime: {
-                    $dateToString: {
-                        date: { $max: '$timesSeen' },
-                        format: '%Y-%m-%d %H:%M',
-                    },
-                },
+                mostRecentTime: { $max: '$timesSeen' },
                 numNewObs: {
                     $size: '$numNewObservations',
                 },

@@ -58,7 +58,7 @@ export class RareBirdAlert<Regions extends string> {
     }
 
     private initializeCron() {
-        return new CronJob('0 */15 * * * *', async () => {
+        return new CronJob('0 */1 * * * *', async () => {
             console.log(`Running Rare Bird Alert for ${this.regionCode}`);
             fetchRareObservations(this.regionCode)
                 .then((eBirdResult) => {

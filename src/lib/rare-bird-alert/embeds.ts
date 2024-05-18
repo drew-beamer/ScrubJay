@@ -5,6 +5,7 @@
 
 import { Client, EmbedBuilder, TextChannel } from 'discord.js';
 import { RecentNotableObservation } from '../utils/mongo/aggregation/get-sightings';
+import { convertTimezone } from './timezone';
 
 /**
  * Generates a description for a RecentNotableObservation
@@ -25,7 +26,7 @@ function generateDescription(observation: RecentNotableObservation) {
     } else {
         description += ` reported at [${name}](https://ebird.org/hotspot/${locId})`;
     }
-    description += `\n:alarm_clock: latest report at ${observation.mostRecentTime}`;
+    description += `\n:alarm_clock: latest report at ${convertTimezone(observation.mostRecentTime, 'America/Los_Angeles')}`;
     description += `\n:eyes: - ${numNewObs} new report(s)`;
     if (previousConfirmed) {
         description += `\n:white_check_mark: - Confirmed at location in last week`;
@@ -70,6 +71,7 @@ function generateEmbed(observation: RecentNotableObservation) {
 export function generateEmbeds(observations: RecentNotableObservation[]) {
     const observationsToSend: EmbedBuilder[] = [];
     observations.forEach((observation) => {
+        console.log(observation);
         const embed = generateEmbed(observation);
         console.log(
             'Successfully generated embed for',
