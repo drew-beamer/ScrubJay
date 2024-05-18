@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { groupObservationsBySpeciesAndSubId } from '../../ebird/parse-observations';
+import { groupObservationsBySpeciesAndSubId } from '../../../rare-bird-alert/parse-observations';
 import { eBirdObservation } from '../../ebird/types.js';
 
 /**

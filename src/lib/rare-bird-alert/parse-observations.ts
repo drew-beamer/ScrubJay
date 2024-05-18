@@ -1,8 +1,8 @@
-import { RareBirdAlertFilter } from '../../filters/types';
-import Observation from '../../models/observation';
-import { CountyRegionMapping } from '../../rare-bird-alert/types';
-import { RecentNotableObservation } from '../mongo/aggregation/get-sightings';
-import { eBirdObservation } from './types';
+import { RareBirdAlertFilter } from '../filters/types';
+import Observation from '../models/observation';
+import { CountyRegionMapping } from './types';
+import { RecentNotableObservation } from '../utils/mongo/aggregation/get-sightings';
+import { eBirdObservation } from '../utils/ebird/types';
 
 type GroupedObservation = Omit<Observation, 'evidence'> & {
     evidence: ('P' | 'A' | 'V' | null)[];

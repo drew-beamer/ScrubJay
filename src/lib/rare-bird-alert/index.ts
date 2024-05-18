@@ -12,7 +12,7 @@ import {
     filterObservations,
     parseFilter,
     separateObservationsByRegion,
-} from '../utils/ebird/parse-observations';
+} from './parse-observations';
 import insertLocationsFromObservations from '../utils/mongo/scripts/locations';
 import getNewNotableObservations, {
     RecentNotableObservation,
@@ -58,23 +58,38 @@ export class RareBirdAlert<Regions extends string> {
     }
 
     private initializeCron() {
-        return new CronJob('0 */5 * * * *', async () => {
+        return new CronJob('0 */15 * * * *', async () => {
             console.log(`Running Rare Bird Alert for ${this.regionCode}`);
-            const eBirdResult = await fetchRareObservations(this.regionCode);
-            try {
-                await insertObservations(this.dbClient, eBirdResult, true);
-                await insertLocationsFromObservations(
-                    this.dbClient,
-                    eBirdResult
-                );
-
-                const recentNotableObservations =
-                    await getNewNotableObservations(this.dbClient);
-                this.dispatchStatewideObservations(recentNotableObservations);
-                this.dispatchObservationsToRegions(recentNotableObservations);
-            } catch (err) {
-                console.error(err);
-            }
+            fetchRareObservations(this.regionCode)
+                .then((eBirdResult) => {
+                    try {
+                        const obsInsert = insertObservations(
+                            this.dbClient,
+                            eBirdResult,
+                            false
+                        );
+                        const locInsert = insertLocationsFromObservations(
+                            this.dbClient,
+                            eBirdResult
+                        );
+                        return Promise.all([obsInsert, locInsert]);
+                    } catch (err) {
+                        console.error(
+                            'Error: could not insert observations or locations'
+                        );
+                    }
+                })
+                .then(
+                    async () => await getNewNotableObservations(this.dbClient)
+                )
+                .then((recentNotableObservations) => {
+                    this.dispatchStatewideObservations(
+                        recentNotableObservations
+                    );
+                    this.dispatchObservationsToRegions(
+                        recentNotableObservations
+                    );
+                });
 
             console.log('Fetch succeeded');
         });
