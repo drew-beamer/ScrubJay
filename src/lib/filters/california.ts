@@ -558,7 +558,7 @@ const californiaFilter = [
     { species: 'Scissor-tailed Flycatcher' },
     { species: 'Western Kingbird x Scissor-tailed Flycatcher (hybrid)' },
     { species: 'White-eyed Vireo' },
-    { species: 'areo' },
+    { species: "Bell's Vireo" },
     { species: "Bell's Vireo (Least)" },
     { species: "Bell's Vireo (Eastern)" },
     { species: 'Gray Vireo' },
