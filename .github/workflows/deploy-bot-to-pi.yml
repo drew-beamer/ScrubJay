@@ -13,7 +13,6 @@ jobs:
               with:
                   node-version: '20.x'
             - name: Create .env
-              working-directory: discord
               run: |
                   echo "${{ secrets.ENV_FILE }}" > .env
             - name: Stop current instance, install, and restart
