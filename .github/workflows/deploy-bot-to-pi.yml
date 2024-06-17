@@ -16,7 +16,6 @@ jobs:
               run: |
                   echo "${{ secrets.ENV_FILE }}" > .env
             - name: Stop current instance, install, and restart
-              working-directory: discord
               run: |
                   # Stop the current instance (if running)
                   pm2 stop scrub-jay-discord || true
