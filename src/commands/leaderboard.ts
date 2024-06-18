@@ -4,15 +4,15 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from 'discord.js';
-import connectToCluster from '../lib/utils/mongo/connect';
 import getLeaderboard from '../lib/utils/mongo/aggregation/get-leaderboard';
+import MongoConnection from '../lib/utils/mongo/connect';
 
 export const data = new SlashCommandBuilder()
     .setName('leaderboard')
     .setDescription('View hotspots in CA with the most rare birds seen');
 
 export async function execute(interaction: CommandInteraction) {
-    const dbClient = await connectToCluster();
+    const dbClient = await MongoConnection.connect();
     const leaderboardFields = getLeaderboard(dbClient).then((data) => {
         return data.map(
             (location, index): string =>
@@ -27,7 +27,6 @@ export async function execute(interaction: CommandInteraction) {
                 }** (${location.count} species) *${location.locInfo.name} (${location.locInfo.county})*`
         );
     });
-    dbClient.close();
 
     const leaderboard = new EmbedBuilder()
         .setColor(0x2856b1)

@@ -8,8 +8,8 @@ import {
 import { commands } from './commands';
 import { config } from './config';
 import { RareBirdAlert } from './lib/rare-bird-alert';
-import connectToCluster from './lib/utils/mongo/connect';
 import californiaConfig from './lib/state-configs/california';
+import MongoConnection from './lib/utils/mongo/connect';
 
 interface ClientWithCommands extends Client {
     commands: Collection<string, any>;
@@ -65,11 +65,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on('ready', async () => {
     console.log('Discord bot is ready!');
-    const dbClient = await connectToCluster();
-    new RareBirdAlert(client, dbClient, californiaConfig);
-    client?.user?.setActivity(`for birds`, {
-        type: ActivityType.Watching,
-    });
+    const dbClient = await MongoConnection.connect();
+    if (dbClient) {
+        new RareBirdAlert(client, dbClient, californiaConfig);
+        client?.user?.setActivity(`for birds`, {
+            type: ActivityType.Watching,
+        });
+    }
 });
 
 client.login(config.DISCORD_TOKEN);
