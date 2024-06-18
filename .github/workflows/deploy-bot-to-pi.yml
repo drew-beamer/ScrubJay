@@ -19,6 +19,6 @@ jobs:
               run: |
                   # Stop the current instance (if running)
                   pm2 stop scrub-jay-discord && pm2 delete scrub-jay-discord || true
-                  npm install
+                  npm i
                   npm run build
                   pm2 start npm --name "scrub-jay-discord" -- start
