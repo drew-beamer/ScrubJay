@@ -27,6 +27,7 @@ export async function execute(interaction: CommandInteraction) {
                 }** (${location.count} species) *${location.locInfo.name} (${location.locInfo.county})*`
         );
     });
+    dbClient.close();
 
     const leaderboard = new EmbedBuilder()
         .setColor(0x2856b1)
