@@ -1,6 +1,8 @@
 import { MongoClient } from 'mongodb';
 import { groupObservationsBySpeciesAndSubId } from '../../../rare-bird-alert/parse-observations';
 import { eBirdObservation } from '../../ebird/types.js';
+import moment from 'moment';
+import 'moment-timezone';
 
 /**
  * Parses through a list of observations and inserts them into the database. If an observation
@@ -23,7 +25,9 @@ export default async function insertObservations(
             comName: observation.comName,
             sciName: observation.sciName,
             locId: observation.locId,
-            obsDt: new Date(observation.obsDt),
+            obsDt: new Date(
+                moment.tz(observation.obsDt, 'America/Los_Angeles').format()
+            ),
             howMany: observation.howMany,
             obsValid: observation.obsValid,
             obsReviewed: observation.obsReviewed,

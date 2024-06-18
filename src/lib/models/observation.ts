@@ -3,7 +3,7 @@ export default interface Observation {
     comName: string;
     sciName: string;
     locId: string;
-    obsDt: Date;
+    obsDt: string;
     howMany: number;
     obsValid: boolean;
     obsReviewed: boolean;
