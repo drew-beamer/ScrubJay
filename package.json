@@ -30,6 +30,7 @@
         "mongodb": "^6.6.2"
     },
     "devDependencies": {
+        "@types/better-sqlite3": "^7.6.11",
         "babel-eslint": "^10.1.0",
         "drizzle-kit": "^0.24.2",
         "eslint": "^8.57.0",
