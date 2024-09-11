@@ -6,7 +6,7 @@ export interface eBirdObservation {
     locName: string;
     lat: number;
     lng: number;
-    obsDt: number;
+    obsDt: string;
     howMany: number;
     obsValid: boolean;
     obsReviewed: boolean;
