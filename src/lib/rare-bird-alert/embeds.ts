@@ -4,7 +4,7 @@
  */
 
 import { Client, EmbedBuilder, TextChannel } from 'discord.js';
-import { RecentNotableObservation } from '../utils/mongo/aggregation/get-sightings';
+import { RecentNotableObservation } from '../utils/db/aggregation/get-sightings';
 import { convertTimezone } from './timezone';
 
 /**

@@ -1,7 +1,7 @@
 import { RareBirdAlertFilter } from '../filters/types';
 import Observation from '../models/observation';
 import { CountyRegionMapping } from './types';
-import { RecentNotableObservation } from '../utils/mongo/aggregation/get-sightings';
+import { RecentNotableObservation } from '../utils/db/aggregation/get-sightings';
 import { eBirdObservation } from '../utils/ebird/types';
 
 type GroupedObservation = Omit<Observation, 'evidence'> & {
