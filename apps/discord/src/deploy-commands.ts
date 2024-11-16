@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import 'dotenv/config';
-import { config } from './config';
+import { config } from './config.js';
 
 const { DISCORD_CLIENT_ID, DISCORD_TOKEN } = config;
 

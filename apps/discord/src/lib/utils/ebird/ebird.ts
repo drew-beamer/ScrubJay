@@ -4,8 +4,7 @@
 
 import { config } from '../../../config';
 import 'dotenv/config';
-import testData from './sampledata.json';
-import { eBirdObservation } from './types';
+import type { eBirdObservation } from './types';
 
 // Headers to be used across all requests
 const myHeaders = new Headers();
@@ -34,7 +33,7 @@ export async function fetchRareObservations(
         requestOptions
     ).then((response) => {
         if (response.status === 200) {
-            return response.json();
+            return response.json() as Promise<eBirdObservation[]>;
         } else {
             throw new Error(`eBird API threw status ${response.status}`);
         }

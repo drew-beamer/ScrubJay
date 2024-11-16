@@ -4,7 +4,7 @@ import db from '../database';
 import { locations, observations, states } from '../database/schema';
 import { eq, gte, sql } from 'drizzle-orm';
 import { fetchRareObservations } from '../utils/ebird/ebird';
-import { eBirdObservation } from '../utils/ebird/types';
+import type { eBirdObservation } from '../utils/ebird/types';
 
 export class RareBirdAlert {
     private job: CronJob;

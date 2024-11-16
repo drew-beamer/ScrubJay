@@ -4,10 +4,12 @@
     "scripts": {
         "dev": "turbo run dev",
         "build": "turbo run build",
-        "lint": "turbo run lint"
+        "lint": "turbo run lint",
+        "check-types": "turbo run check-types"
     },
     "workspaces": [
-        "apps/*"
+        "apps/*",
+        "packages/*"
     ],
     "devDependencies": {
         "turbo": "^2.3.0"
