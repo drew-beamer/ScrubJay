@@ -66,8 +66,6 @@ client.on('ready', async () => {
     client?.user?.setActivity(`for birds`, {
         type: ActivityType.Watching,
     });
-
-    new RareBirdAlert(client);
 });
 
 client.login(config.DISCORD_TOKEN);

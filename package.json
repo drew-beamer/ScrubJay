@@ -1,47 +1,16 @@
 {
-    "name": "scrubjay-discord-bot",
-    "type": "commonjs",
-    "version": "2.0.0",
-    "description": "A bot for the California Birding Discord server",
-    "main": "index.js",
+    "name": "scrubjay",
+    "private": true,
     "scripts": {
-        "dev": "tsx watch src/index.ts",
-        "start": "node dist/index.js",
-        "build": "tsup src/index.ts --minify"
+        "dev": "turbo run dev",
+        "build": "turbo run build",
+        "lint": "turbo run lint"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/drew-beamer/ScrubJay.git"
-    },
-    "author": "Drew Beamer",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/drew-beamer/ScrubJay/issues"
-    },
-    "homepage": "https://github.com/drew-beamer/ScrubJay#readme",
-    "dependencies": {
-        "better-sqlite3": "^11.2.1",
-        "cli-progress": "^3.12.0",
-        "cron": "^3.1.7",
-        "discord.js": "^14.15.2",
-        "dotenv": "^16.4.5",
-        "drizzle-orm": "^0.36.1",
-        "moment": "^2.30.1",
-        "moment-timezone": "^0.5.45",
-        "mongodb": "^6.6.2"
-    },
+    "workspaces": [
+        "apps/*"
+    ],
     "devDependencies": {
-        "@types/better-sqlite3": "^7.6.11",
-        "@types/cli-progress": "^3.11.6",
-        "babel-eslint": "^10.1.0",
-        "drizzle-kit": "^0.28.0",
-        "eslint": "^8.57.0",
-        "eslint-config-airbnb-base": "^15.0.0",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-import": "^2.29.1",
-        "prettier": "^3.2.5",
-        "tsup": "^8.0.2",
-        "tsx": "^4.10.3",
-        "typescript": "^5.4.5"
-    }
+        "turbo": "^2.3.0"
+    },
+    "packageManager": "npm@10.9.0"
 }
