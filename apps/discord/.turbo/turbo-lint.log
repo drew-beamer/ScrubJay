@@ -1,0 +1,23 @@
+
+
+> scrubjay-discord-bot@2.0.0 lint
+> eslint --fix .
+
+[1G[0K[0m[0m
+[0m[4m/Users/andrewbeamer/Repos/ScrubJay/apps/discord/src/config.ts[24m[0m
+[0m  [2m5:7[22m  [33mwarning[39m  DISCORD_TOKEN is not listed as a dependency in turbo.json      [2mturbo/no-undeclared-env-vars[22m[0m
+[0m  [2m5:7[22m  [33mwarning[39m  DISCORD_CLIENT_ID is not listed as a dependency in turbo.json  [2mturbo/no-undeclared-env-vars[22m[0m
+[0m  [2m5:7[22m  [33mwarning[39m  EBIRD_TOKEN is not listed as a dependency in turbo.json        [2mturbo/no-undeclared-env-vars[22m[0m
+[0m[0m
+[0m[4m/Users/andrewbeamer/Repos/ScrubJay/apps/discord/src/index.ts[24m[0m
+[0m  [2m10:10[22m  [33mwarning[39m  'RareBirdAlert' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/andrewbeamer/Repos/ScrubJay/apps/discord/src/lib/rare-bird-alert/index.ts[24m[0m
+[0m  [2m12:25[22m  [33mwarning[39m  'client' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4m/Users/andrewbeamer/Repos/ScrubJay/apps/discord/src/lib/utils/ebird/ebird.ts[24m[0m
+[0m  [2m26:27[22m  [33mwarning[39m  'RequestInit' is not defined  [2mno-undef[22m[0m
+[0m[0m
+[0m[33m[1m✖ 6 problems (0 errors, 6 warnings)[22m[39m[0m
+[0m[33m[1m[22m[39m[0m
+[1G[0K⠙[1G[0K

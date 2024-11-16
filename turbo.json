@@ -1,5 +1,6 @@
 {
     "$schema": "https://turbo.build/schema.json",
+    "ui": "tui",
     "tasks": {
         "build": {
             "dependsOn": ["^build"],
@@ -11,6 +12,9 @@
         },
         "check-types": {
             "dependsOn": ["^check-types"]
+        },
+        "lint": {
+            "dependsOn": ["^lint"]
         }
     }
 }

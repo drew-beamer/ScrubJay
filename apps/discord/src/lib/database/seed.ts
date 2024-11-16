@@ -1,3 +1,4 @@
+import { SingleBar, Presets } from 'cli-progress';
 import db from './index';
 import {
     regions,
@@ -7,7 +8,6 @@ import {
     channelSubscriptions,
     filteredSpecies,
 } from './schema';
-import { SingleBar, Presets } from 'cli-progress';
 
 const countyRegionMapping = {
     Butte: 'US-CA-SC',

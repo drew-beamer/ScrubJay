@@ -7,7 +7,6 @@ import {
 } from 'discord.js';
 import { commands } from './commands';
 import { config } from './config';
-import { RareBirdAlert } from './lib/rare-bird-alert';
 
 interface ClientWithCommands extends Client {
     commands: Collection<string, any>;
