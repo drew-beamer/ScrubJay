@@ -352,12 +352,6 @@ const timezones = [
 export type Timezone = (typeof timezones)[number];
 
 export function convertTimezone(time: Date | string, timezoneString: string) {
-    console.log(time, timezoneString);
-    console.log(
-        new Date(
-            typeof time === 'string' ? new Date(time) : time
-        ).toLocaleString('en-US', { timeZone: timezoneString })
-    );
     return new Date(
         typeof time === 'string' ? new Date(time) : time
     ).toLocaleString('en-US', { timeZone: timezoneString });

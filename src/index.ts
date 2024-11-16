@@ -8,7 +8,6 @@ import {
 import { commands } from './commands';
 import { config } from './config';
 import { RareBirdAlert } from './lib/rare-bird-alert';
-import californiaConfig from './lib/state-configs/california';
 
 interface ClientWithCommands extends Client {
     commands: Collection<string, any>;
@@ -64,10 +63,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
 client.on('ready', async () => {
     console.log('Discord bot is ready!');
-    new RareBirdAlert(client, californiaConfig);
     client?.user?.setActivity(`for birds`, {
         type: ActivityType.Watching,
     });
+
+    new RareBirdAlert(client);
 });
 
 client.login(config.DISCORD_TOKEN);

@@ -1,119 +1,141 @@
-import { Client } from 'discord.js';
-import {
-    RegionChannelMapping,
-    CountyRegionMapping,
-    RareBirdAlertConfig,
-} from './types';
+import type { Client } from 'discord.js';
+import { CronJob } from 'cron';
+import db from '../database';
+import { locations, observations, states } from '../database/schema';
+import { eq, gte, sql } from 'drizzle-orm';
 import { fetchRareObservations } from '../utils/ebird/ebird';
-import insertObservations from '../utils/db/scripts/observations';
-import {
-    parseFilter,
-} from './parse-observations';
-import insertLocationsFromObservations from '../utils/db/scripts/locations';
+import { eBirdObservation } from '../utils/ebird/types';
 
-export class RareBirdAlert<Regions extends string> {
-    private discordClient: Client;
-    private regionCode: string;
-    private statewideChannels: string[];
-    private filteredSpecies: Set<string>;
-    private regionChannels: RegionChannelMapping<Regions>;
-    private countyRegions: CountyRegionMapping<Regions>;
-    // private cronJob: CronJob;
+export class RareBirdAlert {
+    private job: CronJob;
 
-    constructor(
-        discordClient: Client,
-        config: RareBirdAlertConfig<Regions>
-    ) {
-        this.discordClient = discordClient;
-        this.regionCode = config.regionCode;
-        this.statewideChannels = config.statewideChannels;
-        this.filteredSpecies = parseFilter(config.filteredSpecies);
-        this.regionChannels = config.regionChannels;
-        this.countyRegions = config.countyRegions;
-
-        // Run initial fetch to prevent mass send
-        fetchRareObservations(this.regionCode).then(async (eBirdResult) => {
-            await insertLocationsFromObservations(eBirdResult);
-            await insertObservations(eBirdResult, true);
+    constructor(private client: Client) {
+        // Set up the cron job to run every 5 minutes
+        this.job = new CronJob('*/5 * * * *', async () => {
+            await this.run();
         });
-
-        console.log('Database populated.');
-
-        // this.cronJob = this.initializeCron();
-
-        // if (this.cronJob) {
-        //     this.cronJob.start();
-        // }
+        this.job.start(); // Start the cron job
     }
 
-    // private initializeCron() {
-    //     return new CronJob('0 */15 * * * *', async () => {
-    //         console.log(`Running Rare Bird Alert for ${this.regionCode}`);
-    //         fetchRareObservations(this.regionCode)
-    //             .then((eBirdResult) => {
-    //                 try {
-    //                     const obsInsert = insertObservations(
-    //                         eBirdResult,
-    //                         false
-    //                     );
-    //                     return Promise.all([obsInsert]);
-    //                 } catch (err) {
-    //                     console.error(
-    //                         'Error: could not insert observations or locations'
-    //                     );
-    //                 }
-    //             })
-    //             .then(
-    //                 async () => await getNewNotableObservations(this.dbClient)
-    //             )
-    //             .then((recentNotableObservations) => {
-    //                 this.dispatchStatewideObservations(
-    //                     recentNotableObservations
-    //                 );
-    //                 this.dispatchObservationsToRegions(
-    //                     recentNotableObservations
-    //                 );
-    //             });
+    /**
+     * Fetches all active states from the database.
+     */
+    private async getActiveStates() {
+        const statesToFetch = await db
+            .select({ id: states.id })
+            .from(states)
+            .where(eq(states.isActive, true));
+        return statesToFetch.map((state) => state.id);
+    }
 
-    //         console.log('Fetch succeeded');
-    //     });
-    // }
-
-    /*
-    private dispatchStatewideObservations(
-        newObservations: RecentNotableObservation[]
-    ) {
-        const statewideNotableObservations = filterObservations(
-            newObservations,
-            this.filteredSpecies
+    /**
+     * Fetches all rare observations for the given states.
+     */
+    private async fetchRareObservations(states: string[]) {
+        const rareObservationsPromises = states.map(
+            (state) => fetchRareObservations(state) // Fetch all observations
         );
-        const embeds = generateEmbeds(statewideNotableObservations);
-        if (embeds.length >= 1) {
-            sendEmbeds(this.discordClient, embeds, this.statewideChannels);
-        }
-        return embeds.length;
+        const rareObservations = (
+            await Promise.all(rareObservationsPromises)
+        ).flat();
+
+        return rareObservations;
     }
 
-    private dispatchObservationsToRegions(
-        newObservations: RecentNotableObservation[]
-    ) {
-        const observationsByRegion = separateObservationsByRegion(
-            newObservations,
-            this.countyRegions
-        );
-        Array.from(observationsByRegion.keys()).forEach((region) => {
-            const regionObs = observationsByRegion.get(region);
-            if (regionObs) {
-                const regionEmbeds = generateEmbeds(regionObs);
-                if (regionEmbeds.length >= 1) {
-                    sendEmbeds(
-                        this.discordClient,
-                        regionEmbeds,
-                        this.regionChannels[region]
-                    );
-                }
-            }
-        });
+    private async upsertLocations(rawLocations: eBirdObservation[]) {
+        const locationsToUpsert = rawLocations.map((observation) => ({
+            id: observation.locId,
+            county: observation.subnational2Name,
+            state: observation.subnational1Code,
+            name: observation.locName,
+            lat: observation.lat,
+            lng: observation.lng,
+            isPrivate: observation.locationPrivate,
+            lastUpdated: new Date(),
+        }));
+
+        await db
+            .insert(locations)
+            .values(locationsToUpsert)
+            .onConflictDoUpdate({
+                target: [locations.id],
+                set: {
+                    county: sql`excluded.county`,
+                    state: sql`excluded.state`,
+                    name: sql`excluded.name`,
+                    lat: sql`excluded.lat`,
+                    lng: sql`excluded.lng`,
+                    isPrivate: sql`excluded.isPrivate`,
+                    lastUpdated: sql`excluded.lastUpdated`,
+                },
+            });
     }
-        */
+
+    private async upsertObservations(rawObservations: eBirdObservation[]) {
+        const observationsToUpsert = rawObservations.map((observation) => ({
+            speciesCode: observation.speciesCode,
+            subId: observation.subId,
+            comName: observation.comName,
+            sciName: observation.sciName,
+            locId: observation.locId,
+            obsDt: new Date(observation.obsDt),
+            howMany: observation.howMany,
+            obsValid: observation.obsValid,
+            obsReviewed: observation.obsReviewed,
+            presenceNoted: observation.presenceNoted,
+            hasComments: observation.hasComments,
+            createdAt: new Date(),
+            lastUpdated: new Date(),
+        }));
+
+        await db
+            .insert(observations)
+            .values(observationsToUpsert)
+            .onConflictDoUpdate({
+                target: [observations.subId, observations.speciesCode],
+                set: {
+                    comName: sql`excluded.comName`,
+                    sciName: sql`excluded.sciName`,
+                    locId: sql`excluded.locId`,
+                    obsDt: sql`excluded.obsDt`,
+                    howMany: sql`excluded.howMany`,
+                    obsValid: sql`excluded.obsValid`,
+                    obsReviewed: sql`excluded.obsReviewed`,
+                    presenceNoted: sql`excluded.presenceNoted`,
+                    hasComments: sql`excluded.hasComments`,
+                    lastUpdated: sql`excluded.lastUpdated`,
+                },
+            });
+    }
+
+    async run() {
+        console.log('Rare bird alert is running');
+        const states = await this.getActiveStates();
+        const rareObservations = await this.fetchRareObservations(states);
+        // Upsert the locations into the database
+        await this.upsertLocations(rareObservations);
+        // Upsert the recent observations into the database
+        await this.upsertObservations(rareObservations);
+
+        const recentObservations = await db
+            .select()
+            .from(observations)
+            .where(
+                gte(
+                    observations.createdAt,
+                    new Date(Date.now() - 15 * 60 * 1000)
+                )
+            );
+
+        console.log(
+            `Found ${recentObservations.length} recent observations to send to discord`
+        );
+
+        console.log(
+            'Observations:',
+            recentObservations.map(
+                (observation) => `${observation.subId} - ${observation.comName}`
+            )
+        );
+    }
 }

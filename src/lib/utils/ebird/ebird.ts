@@ -4,6 +4,7 @@
 
 import { config } from '../../../config';
 import 'dotenv/config';
+import testData from './sampledata.json';
 import { eBirdObservation } from './types';
 
 // Headers to be used across all requests
@@ -28,7 +29,6 @@ export async function fetchRareObservations(
         headers: myHeaders,
         redirect: 'follow',
     };
-
     return await fetch(
         `https://api.ebird.org/v2/data/obs/${regionCode}/recent/notable?detail=full&back=7`,
         requestOptions

@@ -24,15 +24,18 @@ export default async function insertLocationsFromObservations(
         isPrivate: observation.locationPrivate,
     }));
 
-   return db.insert(locations).values(locationInformation).onConflictDoUpdate({ 
-    target: locations.id, 
-    set: {
-        county: sql`excluded.county`,
-        state: sql`excluded.state`,
-        lat: sql`excluded.lat`,
-        lng: sql`excluded.lng`,
-        name: sql`excluded.name`,
-        isPrivate: sql`excluded.is_private`
-    }
-})
+    return db
+        .insert(locations)
+        .values(locationInformation)
+        .onConflictDoUpdate({
+            target: locations.id,
+            set: {
+                county: sql`excluded.county`,
+                state: sql`excluded.state`,
+                lat: sql`excluded.lat`,
+                lng: sql`excluded.lng`,
+                name: sql`excluded.name`,
+                isPrivate: sql`excluded.is_private`,
+            },
+        });
 }

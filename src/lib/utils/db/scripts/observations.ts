@@ -1,4 +1,3 @@
-import { MongoClient } from 'mongodb';
 import { eBirdObservation } from '../../ebird/types.js';
 import moment from 'moment';
 import 'moment-timezone';
@@ -26,26 +25,29 @@ export default async function insertObservations(
             moment.tz(observation.obsDt, 'America/Los_Angeles').format()
         ),
         createdDt: init
-        ? new Date(new Date().valueOf() - 60 * 30 * 1000)
-        : new Date(),
+            ? new Date(new Date().valueOf() - 60 * 30 * 1000)
+            : new Date(),
         howMany: observation.howMany,
         obsValid: observation.obsValid,
         obsReviewed: observation.obsReviewed,
         subId: observation.subId,
         presenceNoted: observation.presenceNoted,
         hasComments: observation.hasComments,
-        evidence: observation.evidence
     }));
 
-    return db.insert(observations).values(relevantObservations).onConflictDoUpdate({
-        target: [observations.subId, observations.speciesCode, observations.evidence],
-        set: {
-            howMany: sql`excluded.how_many`,
-            locId: sql`excluded.location_id`,
-            obsValid: sql`observation_valid`,
-            obsReviewed: sql`excluded.observation_reviewed`,
-            presenceNoted: sql`excluded.presence_noted`,
-            hasComments: sql`excluded.has_comments`
-        }
-    });
+    return db
+        .insert(observations)
+        .values(relevantObservations)
+        .onConflictDoUpdate({
+            target: [observations.subId, observations.speciesCode],
+            set: {
+                howMany: sql`excluded.how_many`,
+                locId: sql`excluded.location_id`,
+                obsValid: sql`observation_valid`,
+                obsReviewed: sql`excluded.observation_reviewed`,
+                presenceNoted: sql`excluded.presence_noted`,
+                hasComments: sql`excluded.has_comments`,
+                lastUpdated: sql`CURRENT_TIMESTAMP`,
+            },
+        });
 }
