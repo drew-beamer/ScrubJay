@@ -8,7 +8,7 @@ import {
 } from 'drizzle-orm/sqlite-core';
 import { sql } from 'drizzle-orm';
 
-export const locations = sqliteTable('locations', {
+export const locations = sqliteTable('location', {
     id: text('id').primaryKey(),
     county: text('county').notNull(),
     state: text('state').notNull(),
@@ -22,7 +22,7 @@ export const locations = sqliteTable('locations', {
 });
 
 export const observations = sqliteTable(
-    'observations',
+    'observation',
     {
         speciesCode: text('species_code').notNull(),
         subId: text('sub_id').notNull(),
@@ -123,45 +123,44 @@ export const countyRegions = sqliteTable(
     })
 );
 
-export const channelSubscriptions = sqliteTable(
-    'channel_subscriptions',
-    {
-        channelId: text('channel_id'),
-        regionCode: text('region_code').references(() => regions.regionCode, {
-            onDelete: 'cascade',
-            onUpdate: 'cascade',
-        }),
-        stateId: text('state_id').references(() => states.id, {
-            onDelete: 'cascade',
-            onUpdate: 'cascade',
-        }),
-    },
-    (table) => ({
-        pk: primaryKey({
-            columns: [table.channelId, table.regionCode, table.stateId],
-        }),
-    })
-);
+export const channelSubscriptions = sqliteTable('channel_subscription', {
+    channelId: text('channel_id').primaryKey(),
+    regionCode: text('region_code').references(() => regions.regionCode, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    }),
+    stateId: text('state_id').references(() => states.id, {
+        onDelete: 'cascade',
+        onUpdate: 'cascade',
+    }),
+    active: integer('active', { mode: 'boolean' }).notNull().default(true),
+});
 
+/*
+    Filtered species are species that are filtered for a given channel.
+    This is used to prevent spamming the channel with species that are not of interest.
+
+    This also allows for flexible filtering in the future. If ScrubJay supports multiple
+    servers, this will allow for filtering on a per-server/channel basis.
+*/
 export const filteredSpecies = sqliteTable(
     'filtered_species',
     {
         speciesCode: text('species_code'),
-        regionCode: text('region_code').references(() => regions.regionCode, {
-            onDelete: 'cascade',
-            onUpdate: 'cascade',
-        }),
-        stateId: text('state_id').references(() => states.id, {
-            onDelete: 'cascade',
-            onUpdate: 'cascade',
-        }),
+        channelId: text('channel_id').references(
+            () => channelSubscriptions.channelId,
+            {
+                onDelete: 'cascade',
+                onUpdate: 'cascade',
+            }
+        ),
         lastUpdated: integer('last_updated', { mode: 'timestamp' })
             .notNull()
             .default(sql`CURRENT_TIMESTAMP`),
     },
     (table) => ({
         pk: primaryKey({
-            columns: [table.speciesCode, table.regionCode, table.stateId],
+            columns: [table.speciesCode, table.channelId],
         }),
     })
 );

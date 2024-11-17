@@ -1033,7 +1033,7 @@ const californiaFilter = [
 ];
 
 async function seed() {
-    const totalSteps = 6; // Total number of steps for the progress bar
+    const totalSteps = 7; // Total number of steps for the progress bar
     const progressBar = new SingleBar(
         {
             format: 'Seeding | {bar} | {percentage}% | {value}/{total}',
@@ -1082,20 +1082,22 @@ async function seed() {
 
     await db.insert(channelSubscriptions).values(
         Object.entries(regionChannels).map(([region, channels]) => ({
+            channelId: channels[0] || '',
             regionCode: region,
-            channelId: channels[0],
         }))
     );
     progressBar.increment(); // Increment progress
 
     await db
         .insert(channelSubscriptions)
-        .values([{ stateId: 'US-CA', channelId: '1151958598264574002' }]);
+        .values([{ channelId: '1151958598264574002', stateId: 'US-CA' }]);
+
+    progressBar.increment(); // Increment progress
 
     await db.insert(filteredSpecies).values(
         californiaFilter.map((species) => ({
             speciesCode: species,
-            stateId: 'US-CA',
+            channelId: '1151958598264574002',
         }))
     );
 
@@ -1106,5 +1108,5 @@ async function seed() {
 }
 
 seed().catch((error) => {
-    console.error('Seeding failed:', error);
+    console.error(error);
 });
