@@ -5,10 +5,13 @@ import {
     Events,
     GatewayIntentBits,
 } from 'discord.js';
+
 import { commands } from './commands';
 import { config } from './config';
+import { RareBirdAlert } from './cron/rare-bird-alert';
 
 interface ClientWithCommands extends Client {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     commands: Collection<string, any>;
 }
 
@@ -65,6 +68,7 @@ client.on('ready', async () => {
     client?.user?.setActivity(`for birds`, {
         type: ActivityType.Watching,
     });
+    new RareBirdAlert(client);
 });
 
 client.login(config.DISCORD_TOKEN);

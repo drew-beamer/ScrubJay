@@ -1,15 +1,13 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config();
 
-const { DISCORD_TOKEN, DISCORD_CLIENT_ID, EBIRD_TOKEN } = process.env;
+const envSchema = z.object({
+    DISCORD_TOKEN: z.string(),
+    DISCORD_CLIENT_ID: z.string(),
+    EBIRD_TOKEN: z.string(),
+    EBIRD_BASE_URL: z.string().optional().default('https://api.ebird.org/'),
+});
 
-if (!DISCORD_TOKEN || !DISCORD_CLIENT_ID || !EBIRD_TOKEN) {
-    throw new Error("Missing environmental variables");
-}
-
-export const config = {
-    DISCORD_TOKEN,
-    DISCORD_CLIENT_ID,
-    EBIRD_TOKEN,
-}
+export const config = envSchema.parse(process.env);

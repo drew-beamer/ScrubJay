@@ -1,87 +1,8 @@
-import { SingleBar, Presets } from 'cli-progress';
+import { Presets, SingleBar } from 'cli-progress';
+
+import { channelSubscriptions, filteredSpecies } from './schema';
+
 import db from './index';
-import {
-    regions,
-    states,
-    counties,
-    countyRegions,
-    channelSubscriptions,
-    filteredSpecies,
-} from './schema';
-
-const countyRegionMapping = {
-    Butte: 'US-CA-SC',
-    Colusa: 'US-CA-SC',
-    'El Dorado': 'US-CA-SC',
-    Glenn: 'US-CA-SC',
-    Lassen: 'US-CA-SC',
-    Modoc: 'US-CA-SC',
-    Nevada: 'US-CA-SC',
-    Placer: 'US-CA-SC',
-    Plumas: 'US-CA-SC',
-    Sacramento: 'US-CA-SC',
-    Shasta: 'US-CA-SC',
-    Sierra: 'US-CA-SC',
-    Siskiyou: 'US-CA-SC',
-    Sutter: 'US-CA-SC',
-    Tehama: 'US-CA-SC',
-    Yolo: 'US-CA-SC',
-    Yuba: 'US-CA-SC',
-    'Del Norte': 'US-CA-NC',
-    Humboldt: 'US-CA-NC',
-    Lake: 'US-CA-NC',
-    Mendocino: 'US-CA-NC',
-    Napa: 'US-CA-SFB',
-    Sonoma: 'US-CA-SFB',
-    Trinity: 'US-CA-NC',
-    Alameda: 'US-CA-SFB',
-    'Contra Costa': 'US-CA-SFB',
-    Marin: 'US-CA-SFB',
-    'San Francisco': 'US-CA-SFB',
-    'San Mateo': 'US-CA-SFB',
-    'Santa Clara': 'US-CA-SFB',
-    Solano: 'US-CA-SFB',
-    Alpine: 'US-CA-NSJV',
-    Amador: 'US-CA-NSJV',
-    Calaveras: 'US-CA-NSJV',
-    Madera: 'US-CA-NSJV',
-    Mariposa: 'US-CA-NSJV',
-    Merced: 'US-CA-NSJV',
-    Mono: 'US-CA-NSJV',
-    'San Joaquin': 'US-CA-NSJV',
-    Stanislaus: 'US-CA-NSJV',
-    Tuolumne: 'US-CA-NSJV',
-    Monterey: 'US-CA-CC',
-    'San Benito': 'US-CA-CC',
-    'San Luis Obispo': 'US-CA-CC',
-    'Santa Barbara': 'US-CA-CC',
-    Ventura: 'US-CA-CC',
-    'Santa Cruz': 'US-CA-CC',
-    Fresno: 'US-CA-SSJV',
-    Inyo: 'US-CA-SSJV',
-    Kern: 'US-CA-SSJV',
-    Kings: 'US-CA-SSJV',
-    Tulare: 'US-CA-SSJV',
-    'Los Angeles': 'US-CA-LA',
-    'San Bernardino': 'US-CA-IE',
-    Riverside: 'US-CA-IE',
-    Orange: 'US-CA-OR',
-    'San Diego': 'US-CA-SDI',
-    Imperial: 'US-CA-SDI',
-};
-
-const regionChannels = {
-    'US-CA-SDI': ['1156452037337301003'],
-    'US-CA-OR': ['1156452064625426452'],
-    'US-CA-LA': ['1156452053145616394'],
-    'US-CA-IE': ['1156452787492757547'],
-    'US-CA-SFB': ['1156452216631197817'],
-    'US-CA-CC': ['1156452330590445649'],
-    'US-CA-NSJV': ['1156452103133343814'],
-    'US-CA-SSJV': ['1156452147156758589'],
-    'US-CA-SC': ['1156452191129841674'],
-    'US-CA-NC': ['1156452314236862484'],
-};
 
 const californiaFilter = [
     'Emu',
@@ -1032,8 +953,86 @@ const californiaFilter = [
     'Yellow-faced Grassquit',
 ];
 
+const caSubscriptions = {
+    '1156452191129841674': [
+        { countyCode: 'US-CA-007', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-011', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-017', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-021', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-035', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-049', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-057', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-061', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-063', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-067', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-089', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-091', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-093', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-101', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-103', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-113', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-115', stateCode: 'US-CA' },
+    ],
+    '1156452314236862484': [
+        { countyCode: 'US-CA-015', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-023', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-033', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-045', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-105', stateCode: 'US-CA' },
+    ],
+    '1156452216631197817': [
+        { countyCode: 'US-CA-055', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-097', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-001', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-013', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-043', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-075', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-081', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-085', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-095', stateCode: 'US-CA' },
+    ],
+    '1156452103133343814': [
+        { countyCode: 'US-CA-003', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-005', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-009', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-039', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-041', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-047', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-051', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-077', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-099', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-109', stateCode: 'US-CA' },
+    ],
+    '1156452330590445649': [
+        { countyCode: 'US-CA-053', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-069', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-079', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-083', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-111', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-087', stateCode: 'US-CA' },
+    ],
+    '1156452147156758589': [
+        { countyCode: 'US-CA-019', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-027', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-029', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-031', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-107', stateCode: 'US-CA' },
+    ],
+    '1156452053145616394': [{ countyCode: 'US-CA-037', stateCode: 'US-CA' }],
+    '1156452787492757547': [
+        { countyCode: 'US-CA-071', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-065', stateCode: 'US-CA' },
+    ],
+    '1156452064625426452': [{ countyCode: 'US-CA-059', stateCode: 'US-CA' }],
+    '1156452037337301003': [
+        { countyCode: 'US-CA-073', stateCode: 'US-CA' },
+        { countyCode: 'US-CA-025', stateCode: 'US-CA' },
+    ],
+    '1151958598264574002': [{ stateCode: 'US-CA', countyCode: '*' }],
+};
+
 async function seed() {
-    const totalSteps = 7; // Total number of steps for the progress bar
+    const totalSteps = 2; // Total number of steps for the progress bar
     const progressBar = new SingleBar(
         {
             format: 'Seeding | {bar} | {percentage}% | {value}/{total}',
@@ -1045,58 +1044,19 @@ async function seed() {
     );
 
     progressBar.start(totalSteps, 0); // Start the progress bar
-
-    await db.insert(states).values([{ id: 'US-CA', name: 'California' }]);
-    progressBar.increment(); // Increment progress
-
-    await db.insert(regions).values([
-        { regionCode: 'US-CA-SDI', regionName: 'San Diego - Imperial' },
-        { regionCode: 'US-CA-OR', regionName: 'Orange' },
-        { regionCode: 'US-CA-LA', regionName: 'Los Angeles' },
-        { regionCode: 'US-CA-IE', regionName: 'Inland Empire' },
-        { regionCode: 'US-CA-SFB', regionName: 'San Francisco Bay' },
-        { regionCode: 'US-CA-CC', regionName: 'Central Coast' },
-        { regionCode: 'US-CA-NSJV', regionName: 'Northern San Joaquin Valley' },
-        { regionCode: 'US-CA-SSJV', regionName: 'Southern San Joaquin Valley' },
-        { regionCode: 'US-CA-SC', regionName: 'Superior California' },
-        { regionCode: 'US-CA-NC', regionName: 'North Coast' },
-    ]);
-    progressBar.increment(); // Increment progress
-
-    await db.insert(counties).values(
-        Object.keys(countyRegionMapping).map((county) => ({
-            countyName: county,
-            stateCode: 'US-CA',
-        }))
-    );
-    progressBar.increment(); // Increment progress
-
-    await db.insert(countyRegions).values(
-        Object.entries(countyRegionMapping).map(([county, region]) => ({
-            countyName: county,
-            stateCode: 'US-CA',
-            regionCode: region,
-        }))
-    );
-    progressBar.increment(); // Increment progress
-
     await db.insert(channelSubscriptions).values(
-        Object.entries(regionChannels).map(([region, channels]) => ({
-            channelId: channels[0] || '',
-            regionCode: region,
-        }))
+        Object.entries(caSubscriptions).flatMap(([channelId, subscriptions]) =>
+            subscriptions.map((subscription) => ({
+                channelId,
+                countyCode: subscription.countyCode,
+                stateCode: subscription.stateCode,
+            }))
+        )
     );
     progressBar.increment(); // Increment progress
-
-    await db
-        .insert(channelSubscriptions)
-        .values([{ channelId: '1151958598264574002', stateId: 'US-CA' }]);
-
-    progressBar.increment(); // Increment progress
-
     await db.insert(filteredSpecies).values(
         californiaFilter.map((species) => ({
-            speciesCode: species,
+            commonName: species,
             channelId: '1151958598264574002',
         }))
     );

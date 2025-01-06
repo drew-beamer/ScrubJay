@@ -1,4 +1,5 @@
 import express from "express";
+
 import { regions } from "./regions";
 import { species } from "./species";
 const app = express();
@@ -65,9 +66,9 @@ function addRandomizedObs(regionCode: string): eBirdObservation | undefined {
     locationPrivate: false,
     subnational1Code: region.code,
     subnational1Name: region.name,
-    subnational2Code: randomSubregion,
-    subnational2Name:
+    subnational2Code:
       region.counties[randomSubregion as keyof typeof region.counties],
+    subnational2Name: randomSubregion,
     countryCode: "US",
     countryName: "United States",
     firstName: "John",
