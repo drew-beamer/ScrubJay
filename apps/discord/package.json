@@ -8,8 +8,7 @@
         "dev": "tsx watch src/index.ts",
         "start": "node dist/index.js",
         "build": "tsup src/index.ts --minify",
-        "lint": "eslint --fix .",
-        "seed": "tsx src/utils/database/seed.ts"
+        "lint": "eslint --fix ."
     },
     "repository": {
         "type": "git",
