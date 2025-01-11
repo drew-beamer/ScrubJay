@@ -27,7 +27,7 @@ RUN npm install
 COPY --from=builder /app/out/full/ .
 
 RUN npm run build
-RUN npm prune --omit=dev && npm install drizzle-kit --save-dev
+RUN npm prune --production
 
 FROM base AS runner
 WORKDIR /app
