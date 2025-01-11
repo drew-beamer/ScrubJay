@@ -7,6 +7,10 @@ permissions:
 on:
   push:
     branches: [main]
+    paths:
+      - ".github/workflows/deploy.yml"
+      - "apps/discord/**"
+  workflow_dispatch:
 
 jobs:
   deploy:
