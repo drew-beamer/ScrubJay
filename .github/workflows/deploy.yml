@@ -8,8 +8,9 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/deploy.yml"
       - "apps/discord/**"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 jobs:
