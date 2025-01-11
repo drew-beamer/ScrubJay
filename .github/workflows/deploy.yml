@@ -49,7 +49,6 @@ jobs:
               --mount type=volume,src=scrubjay,target=/etc/dbs/scrubjay \
               -e DISCORD_TOKEN="${{ secrets.DISCORD_TOKEN }}" \
               -e DISCORD_CLIENT_ID="${{ secrets.DISCORD_CLIENT_ID }}" \
-              -e DISCORD_GUILD_ID="${{ secrets.DISCORD_GUILD_ID }}" \
               -e EBIRD_TOKEN="${{ secrets.EBIRD_TOKEN }}" \
               -e EBIRD_BASE_URL="${{ secrets.EBIRD_BASE_URL }}" \
               -e DATABASE_URL="/etc/dbs/scrubjay/scrubjay.db" \
