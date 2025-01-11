@@ -5,6 +5,6 @@ export default defineConfig({
     schema: './src/utils/database/schema.ts',
     out: './src/utils/database/drizzle',
     dbCredentials: {
-        url: 'scrubjay.db',
+        url: process.env.DATABASE_URL || '/etc/dbs/scrubjay/scrubjay.db',
     },
 });
