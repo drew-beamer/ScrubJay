@@ -24,7 +24,7 @@ jobs:
           context: .
           file: ./apps/discord/Dockerfile
           push: true
-          tags: ghcr.io/scrubjay/scrubjay-discord-bot:latest
+          tags: ghcr.io/${{ github.actor }}/scrubjay-discord:latest
 
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@master
