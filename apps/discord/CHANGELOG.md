@@ -1,5 +1,11 @@
 # scrubjay-discord-bot
 
+## 2.1.0
+
+### Minor Changes
+
+- 752ed3c: This adds a feature to vote on species to remove from a channel's notifications
+
 ## 2.0.0
 
 ### Major Changes
