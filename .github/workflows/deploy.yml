@@ -57,4 +57,4 @@ jobs:
               -e EBIRD_BASE_URL="${{ secrets.EBIRD_BASE_URL }}" \
               -e DATABASE_URL="/etc/dbs/scrubjay/scrubjay.db" \
               --restart unless-stopped \
-              ghcr.io/${{ github.repository }}/scrubjay-discord-bot:latest
+              ghcr.io/${{ github.actor }}/scrubjay-discord:latest
