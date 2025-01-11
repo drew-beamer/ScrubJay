@@ -41,12 +41,20 @@ jobs:
           username: ${{ secrets.DROPLET_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Pull the latest image
-            docker pull ghcr.io/${{ github.actor }}/scrubjay-discord:latest
+            # Store the current image ID for later removal
+            OLD_IMAGE=$(docker inspect --format='{{.Image}}' scrubjay-bot 2>/dev/null || echo "")
 
-            # Stop and remove existing container if it exists
+            # Stop and remove existing container
             docker stop scrubjay-bot || true
             docker rm scrubjay-bot || true
+
+            # Remove the old image if it exists
+            if [ ! -z "$OLD_IMAGE" ]; then
+              docker rmi $OLD_IMAGE || true
+            fi
+
+            # Pull the latest image
+            docker pull ghcr.io/${{ github.actor }}/scrubjay-discord:latest
 
             # Create volume if it doesn't exist
             docker volume create scrubjay
