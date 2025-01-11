@@ -1,0 +1,56 @@
+name: Deploy Discord Bot
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./apps/discord/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}/scrubjay-discord-bot:latest
+
+      - name: Deploy to DigitalOcean
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Pull the latest image
+            docker pull ghcr.io/${{ github.repository }}/scrubjay-discord-bot:latest
+
+            # Stop and remove existing container if it exists
+            docker stop scrubjay-bot || true
+            docker rm scrubjay-bot || true
+
+            # Create volume if it doesn't exist
+            docker volume create scrubjay_db
+
+            # Run new container
+            docker run -d \
+              --name scrubjay-bot \
+              --mount type=volume,src=scrubjay,target=/etc/dbs/scrubjay \
+              -e DISCORD_TOKEN="${{ secrets.DISCORD_TOKEN }}" \
+              -e DISCORD_CLIENT_ID="${{ secrets.DISCORD_CLIENT_ID }}" \
+              -e EBIRD_TOKEN="${{ secrets.EBIRD_TOKEN }}" \
+              -e EBIRD_BASE_URL="${{ secrets.EBIRD_BASE_URL }}" \
+              -e DATABASE_URL="/etc/dbs/scrubjay/scrubjay.db" \
+              --restart unless-stopped \
+              ghcr.io/${{ github.repository }}/scrubjay-discord-bot:latest

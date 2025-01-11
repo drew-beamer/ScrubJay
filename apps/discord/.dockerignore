@@ -1,0 +1,11 @@
+**/data
+**/dist
+**/drizzle
+**/node_modules
+**/out
+**/package-lock.json
+**/package.json
+**/turbo
+**/tsconfig.json
+**/tsconfig.node.json
+**/tsconfig.node.json

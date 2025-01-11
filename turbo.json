@@ -3,8 +3,9 @@
     "ui": "tui",
     "tasks": {
         "build": {
+            "env": ["DATABASE_URL"],
             "dependsOn": ["^build"],
-            "outputs": ["dist/**/*"]
+            "outputs": ["dist/**"]
         },
         "dev": {
             "persistent": true,
