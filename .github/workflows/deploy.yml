@@ -38,14 +38,14 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Pull the latest image
-            docker pull ghcr.io/${{ github.repository }}/scrubjay-discord-bot:latest
+            docker pull ghcr.io/${{ github.actor }}/scrubjay-discord:latest
 
             # Stop and remove existing container if it exists
             docker stop scrubjay-bot || true
             docker rm scrubjay-bot || true
 
             # Create volume if it doesn't exist
-            docker volume create scrubjay_db
+            docker volume create scrubjay
 
             # Run new container
             docker run -d \
