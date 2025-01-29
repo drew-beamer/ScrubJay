@@ -1,4 +1,5 @@
 import { CronJob } from 'cron';
+import { fromZonedTime } from 'date-fns-tz';
 import { eq, sql, gte, and, or, not, exists } from 'drizzle-orm';
 
 import { createRareBirdAlertEmbed } from '@/embeds/rare-bird-alert';
@@ -96,7 +97,10 @@ export class RareBirdAlert {
             comName: observation.comName,
             sciName: observation.sciName,
             locId: observation.locId,
-            obsDt: new Date(observation.obsDt),
+            obsDt: fromZonedTime(
+                new Date(observation.obsDt),
+                'America/Los_Angeles'
+            ),
             howMany: observation.howMany || -1,
             obsValid: observation.obsValid,
             obsReviewed: observation.obsReviewed,

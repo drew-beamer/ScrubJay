@@ -1,5 +1,11 @@
 # scrubjay-discord-bot
 
+## 2.1.1
+
+### Patch Changes
+
+- 453a9d6: fix 8 hour offset issue
+
 ## 2.1.0
 
 ### Minor Changes
