@@ -4,4 +4,3 @@ CREATE TABLE `county_timezones` (
 );
 --> statement-breakpoint
 CREATE INDEX `county_code_idx` ON `county_timezones` (`county_code`);--> statement-breakpoint
-ALTER TABLE `channel_subscription` DROP COLUMN `timezone`;
