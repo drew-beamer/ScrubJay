@@ -10,6 +10,7 @@ import {
     observations,
     filteredSpecies,
     channelSubscriptions,
+    countyTimezones,
 } from '@/utils/database/schema';
 import { fetchRareObservations } from '@/utils/ebird';
 import type {
@@ -25,7 +26,7 @@ export class RareBirdAlert {
 
     constructor(private client: Client) {
         this.run(true);
-        this.job = new CronJob('*/15 * * * *', async () => {
+        this.job = new CronJob('*/1 * * * *', async () => {
             await this.run(false);
         });
         this.job.start();
@@ -37,6 +38,16 @@ export class RareBirdAlert {
             .from(channelSubscriptions)
             .where(eq(channelSubscriptions.active, true));
         return statesToFetch.map((state) => state.stateCode);
+    }
+
+    private async getTimezoneForCounty(countyCode: string): Promise<string> {
+        const result = await db
+            .select({ timezone: countyTimezones.timezone })
+            .from(countyTimezones)
+            .where(eq(countyTimezones.countyCode, countyCode))
+            .limit(1);
+
+        return result.at(0)?.timezone ?? 'America/Los_Angeles';
     }
 
     private async fetchRareObservations(states: string[]) {
@@ -91,29 +102,33 @@ export class RareBirdAlert {
         rawObservations: EBirdObservationWithMediaCounts[],
         initialRun: boolean = false
     ) {
-        const observationsToUpsert = rawObservations.map((observation) => ({
-            speciesCode: observation.speciesCode,
-            subId: observation.subId,
-            comName: observation.comName,
-            sciName: observation.sciName,
-            locId: observation.locId,
-            obsDt: fromZonedTime(
-                new Date(observation.obsDt),
-                'America/Los_Angeles'
-            ),
-            howMany: observation.howMany || -1,
-            obsValid: observation.obsValid,
-            obsReviewed: observation.obsReviewed,
-            presenceNoted: observation.presenceNoted,
-            photoCount: observation.photos,
-            audioCount: observation.audio,
-            videoCount: observation.video,
-            hasComments: observation.hasComments,
-            createdAt: initialRun
-                ? new Date(Date.now() - 300 * 1000) // 5 minutes ago for initial run
-                : new Date(),
-            lastUpdated: new Date(),
-        }));
+        const observationsToUpsert = await Promise.all(
+            rawObservations.map(async (observation) => {
+                const timezone = await this.getTimezoneForCounty(
+                    observation.subnational2Code
+                );
+                return {
+                    speciesCode: observation.speciesCode,
+                    subId: observation.subId,
+                    comName: observation.comName,
+                    sciName: observation.sciName,
+                    locId: observation.locId,
+                    obsDt: fromZonedTime(new Date(observation.obsDt), timezone),
+                    howMany: observation.howMany || -1,
+                    obsValid: observation.obsValid,
+                    obsReviewed: observation.obsReviewed,
+                    presenceNoted: observation.presenceNoted,
+                    photoCount: observation.photos,
+                    audioCount: observation.audio,
+                    videoCount: observation.video,
+                    hasComments: observation.hasComments,
+                    createdAt: initialRun
+                        ? new Date(Date.now() - 300 * 1000) // 5 minutes ago for initial run
+                        : new Date(),
+                    lastUpdated: new Date(),
+                };
+            })
+        );
 
         const batchSize = 100;
         for (let i = 0; i < observationsToUpsert.length; i += batchSize) {

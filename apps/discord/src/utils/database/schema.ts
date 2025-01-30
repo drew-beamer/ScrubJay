@@ -8,6 +8,8 @@ import {
     index,
 } from 'drizzle-orm/sqlite-core';
 
+import { timezones } from '../timezone';
+
 export const locations = sqliteTable(
     'location',
     {
@@ -112,4 +114,15 @@ export const filteredSpecies = sqliteTable(
             table.channelId
         ),
     ]
+);
+
+export const countyTimezones = sqliteTable(
+    'county_timezones',
+    {
+        countyCode: text('county_code').primaryKey(),
+        timezone: text('timezone', { enum: timezones })
+            .notNull()
+            .default('America/Los_Angeles'),
+    },
+    (table) => [index('county_code_idx').on(table.countyCode)]
 );
