@@ -124,4 +124,4 @@ This is a relatively simple process. You can add a county timezone by using the 
 INSERT INTO county_timezones (county_code, timezone) VALUES ('<county-code>', '<timezone>');
 ```
 
-The timezones available to use are listed [here](../apps/discord/src/utils/timezone.ts). Please format these exactly as they are listed.
+The timezones available to use are listed [here](https://github.com/drew-beamer/ScrubJay/blob/81446b52c67f4986fa8d21123555062f6872adae/apps/discord/src/utils/timezone.ts#L2-L350). Please format these exactly as they are listed.
