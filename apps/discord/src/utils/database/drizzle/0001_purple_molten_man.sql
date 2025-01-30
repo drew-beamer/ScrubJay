@@ -3,4 +3,4 @@ CREATE TABLE `county_timezones` (
 	`timezone` text DEFAULT 'America/Los_Angeles' NOT NULL
 );
 --> statement-breakpoint
-CREATE INDEX `county_code_idx` ON `county_timezones` (`county_code`);--> statement-breakpoint
+CREATE INDEX `county_code_idx` ON `county_timezones` (`county_code`);
