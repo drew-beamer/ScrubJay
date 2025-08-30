@@ -1,25 +1,23 @@
 import { CronJob } from "cron";
 import { fromZonedTime } from "date-fns-tz";
-import { eq, sql, gte, and, or, not, exists } from "drizzle-orm";
-
+import type { Client } from "discord.js";
+import { and, eq, exists, gte, not, or, sql } from "drizzle-orm";
 import { createRareBirdAlertEmbed } from "@/embeds/rare-bird-alert";
 import type { GroupedObservation } from "@/embeds/rare-bird-alert/types";
 import db from "@/utils/database";
 import {
-	locations,
-	observations,
-	filteredSpecies,
 	channelSubscriptions,
 	countyTimezones,
+	filteredSpecies,
+	locations,
+	observations,
 } from "@/utils/database/schema";
 import { fetchRareObservations } from "@/utils/ebird";
 import type {
 	EBirdObservation,
 	EBirdObservationResponse,
 } from "@/utils/ebird/schema";
-
 import type { EBirdObservationWithMediaCounts } from "./types";
-import type { Client } from "discord.js";
 
 export class RareBirdAlert {
 	private job: CronJob;

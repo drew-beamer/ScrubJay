@@ -2,6 +2,7 @@ import express from "express";
 
 import { regions } from "./regions";
 import { species } from "./species";
+
 const app = express();
 const PORT = 8080;
 
@@ -90,11 +91,11 @@ function addRandomizedObs(regionCode: string): eBirdObservation | undefined {
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
 	res.send("Scrubjay Mock API Server for Development");
 });
 
-app.get("/health", (req, res) => {
+app.get("/health", (_req, res) => {
 	res.send("ok");
 });
 

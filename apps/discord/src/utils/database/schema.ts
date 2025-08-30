@@ -1,11 +1,11 @@
 import { sql } from "drizzle-orm";
 import {
-	integer,
-	text,
-	sqliteTable,
-	real,
-	primaryKey,
 	index,
+	integer,
+	primaryKey,
+	real,
+	sqliteTable,
+	text,
 } from "drizzle-orm/sqlite-core";
 
 import { timezones } from "../timezone";

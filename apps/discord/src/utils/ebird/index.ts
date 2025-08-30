@@ -6,8 +6,8 @@ import { config } from "@/config";
 
 import "dotenv/config";
 import {
-	ebirdObservationResponseSchema,
 	type EBirdObservationResponse,
+	ebirdObservationResponseSchema,
 } from "./schema";
 
 // Headers to be used across all requests
