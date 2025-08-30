@@ -1,24 +1,24 @@
 {
-    "$schema": "https://turbo.build/schema.json",
-    "ui": "tui",
-    "tasks": {
-        "build": {
-            "env": ["DATABASE_URL"],
-            "dependsOn": ["^build"],
-            "outputs": ["dist/**"]
-        },
-        "dev": {
-            "persistent": true,
-            "cache": false
-        },
-        "start": {
-            "cache": false
-        },
-        "check-types": {
-            "dependsOn": ["^check-types"]
-        },
-        "lint": {
-            "dependsOn": ["^lint"]
-        }
-    }
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"tasks": {
+		"build": {
+			"env": ["DATABASE_URL"],
+			"dependsOn": ["^build"],
+			"outputs": ["dist/**"]
+		},
+		"dev": {
+			"persistent": true,
+			"cache": false
+		},
+		"start": {
+			"cache": false
+		},
+		"check-types": {
+			"dependsOn": ["^check-types"]
+		},
+		"lint": {
+			"dependsOn": ["^lint"]
+		}
+	}
 }

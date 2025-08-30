@@ -1,20 +1,20 @@
 {
-  "version": "7",
-  "dialect": "sqlite",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "6",
-      "when": 1736559190918,
-      "tag": "0000_first_lucky_pierre",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1738194511370,
-      "tag": "0001_purple_molten_man",
-      "breakpoints": true
-    }
-  ]
+	"version": "7",
+	"dialect": "sqlite",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "6",
+			"when": 1736559190918,
+			"tag": "0000_first_lucky_pierre",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "6",
+			"when": 1738194511370,
+			"tag": "0001_purple_molten_man",
+			"breakpoints": true
+		}
+	]
 }

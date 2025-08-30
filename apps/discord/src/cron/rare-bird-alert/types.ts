@@ -1,26 +1,26 @@
-import type { EBirdObservation } from '@/utils/ebird/schema';
+import type { EBirdObservation } from "@/utils/ebird/schema";
 
 export type RegionChannelMapping<Regions extends string> = Record<
-    Regions,
-    string[]
+	Regions,
+	string[]
 >;
 export type CountyRegionMapping<Regions extends string> = Record<
-    string,
-    Regions
+	string,
+	Regions
 >;
 
 export interface RareBirdAlertConfig<Regions extends string> {
-    regionCode: string;
-    statewideChannels: string[];
-    filteredSpecies: Set<string>;
-    regionChannels: RegionChannelMapping<Regions>;
-    countyRegions: CountyRegionMapping<Regions>;
+	regionCode: string;
+	statewideChannels: string[];
+	filteredSpecies: Set<string>;
+	regionChannels: RegionChannelMapping<Regions>;
+	countyRegions: CountyRegionMapping<Regions>;
 }
 
 type MediaCounts = {
-    photos: number;
-    audio: number;
-    video: number;
+	photos: number;
+	audio: number;
+	video: number;
 };
 
 export type EBirdObservationWithMediaCounts = EBirdObservation & MediaCounts;
