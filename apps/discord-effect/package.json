@@ -1,0 +1,28 @@
+{
+  "name": "discord-effect",
+  "version": "1.0.0",
+  "description": "Effect rewrite for ScrubJay",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "tsx watch src/main.ts",
+    "build": "tsup src/main.ts --env.NODE_ENV=production",
+    "start": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.15.0",
+  "devDependencies": {
+    "@scrubjay/typescript-config": "workspace:*",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@effect/platform-node": "^0.96.0",
+    "discord.js": "^14.22.1",
+    "dotenv": "^16.6.1",
+    "effect": "^3.17.9"
+  }
+}
