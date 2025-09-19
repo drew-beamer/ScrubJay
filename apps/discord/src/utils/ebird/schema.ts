@@ -20,14 +20,14 @@ export const ebirdObservationSchema = z.object({
     subnational1Name: z.string(),
     countryCode: z.string(),
     countryName: z.string(),
-    userDisplayName: z.string(),
+    userDisplayName: z.string().optional().default(''),
     obsId: z.string(),
     checklistId: z.string(),
     presenceNoted: z.boolean(),
     hasComments: z.boolean(),
     evidence: z.enum(['P', 'A', 'V']).optional().nullable(),
-    firstName: z.string(),
-    lastName: z.string(),
+    firstName: z.string().optional().default(''),
+    lastName: z.string().optional().default(''),
     hasRichMedia: z.boolean(),
 });
 
