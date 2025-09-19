@@ -24,7 +24,7 @@ export class RareBirdAlert {
 
     constructor(private client: Client) {
         this.run(true);
-        this.job = new CronJob('*/15 * * * *', async () => {
+        this.job = new CronJob('*/20 * * * *', async () => {
             await this.run(false);
         });
         this.job.start();
